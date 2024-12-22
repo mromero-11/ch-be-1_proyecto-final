@@ -1,6 +1,5 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
-import { Server } from 'socket.io';
 import productsRoutes from './routes/products.routes.js';
 import cartsRoutes from './routes/carts.routes.js';
 import viewsRoutes from './routes/views.routes.js';
@@ -41,28 +40,4 @@ app.get('/ping-handlebars', (req, res) => {
 //  run http server
 const httpServer = app.listen(PORT, () => {
     console.log("server running, listening on port " + PORT);
-});
-
-//  run socket server
-const socketServer = new Server(httpServer);
-
-socketServer.on('connection', socket => {
-    console.log("socket running");
-
-    //  fetch and send products to clients
-    const sendProducts = async () => {
-        try {
-            const response = await fetch('http://localhost:' + PORT + '/api/products');
-            if (!response.ok) throw new Error('Failed to fetch products');
-            const products = await response.json();
-            
-            //  broadcast to all clients
-            socketServer.emit('updateProducts', products); 
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        }
-    };
-
-    //  listen for requests to fetch products
-    socket.on('requestProducts', sendProducts);
 });
