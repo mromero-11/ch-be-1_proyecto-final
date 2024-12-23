@@ -1,14 +1,14 @@
 import { Router } from "express";
-import ProductManager from '../services/ProductManager.js';
+import ProductService from '../services/product.service.js'; 
 
 const router = Router();
-const productManager = new ProductManager();
+const productService = new ProductService();
 
 //  get all products
 router.get('/', async (req, res) => {
     try {
         const limit = req.query.limit ? parseInt(req.query.limit) : undefined
-        const products = await productManager.getAllProducts(limit)
+        const products = await productService.getAllProducts(limit)
         res.json(products);
     } catch (error) {
         console.log(error);
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 router.get('/:pid', async (req, res) => {
     try {
         const productId = req.params.pid;
-        const product = await productManager.getProductById(productId);
+        const product = await productService.getProductById(productId);
         return product 
             ? res.json(product) 
             : res.status(404).send('Producto no encontrado');
@@ -33,7 +33,7 @@ router.get('/:pid', async (req, res) => {
 //  add product
 router.post('/', async (req, res) => {
     try {
-        const newProduct = await productManager.addProduct(req.body);
+        const newProduct = await productService.addProduct(req.body);
         res.status(201).json(newProduct);
     } catch (error) {
         console.log(error);
@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
 router.put('/:pid', async (req, res) => {
     try {
         const productId = req.params.pid;
-        const updatedProduct = await productManager.updateProduct(productId, req.body);
+        const updatedProduct = await productService.updateProduct(productId, req.body);
         return updatedProduct 
             ? res.json(updatedProduct) 
             : res.status(404).send('Producto no encontrado');
@@ -59,7 +59,7 @@ router.put('/:pid', async (req, res) => {
 router.delete('/:pid', async (req, res) => {
     try {
         const productId = req.params.pid;
-        const deletedProduct = await productManager.deleteProduct(productId);
+        const deletedProduct = await productService.deleteProduct(productId);
         return deletedProduct 
             ? res.json(deletedProduct) 
             : res.status(404).send('Producto no encontrado');

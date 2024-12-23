@@ -1,9 +1,18 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
+import mongoose from 'mongoose';
 import productsRoutes from './routes/products.routes.js';
 import cartsRoutes from './routes/carts.routes.js';
 import viewsRoutes from './routes/views.routes.js';
 import __dirname from './utils.js';
+
+// MongoDB connection
+const MONGO_URI = 'mongodb://localhost:27017/chbe1';
+mongoose.connect(MONGO_URI).then(() => {
+    console.log('connected to MongoDB');
+}).catch((error) => {
+    console.error('error connecting to MongoDB:', error);
+});
 
 //  server & port
 const app = express();
